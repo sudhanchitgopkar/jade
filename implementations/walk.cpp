@@ -46,19 +46,19 @@ int main() {
 
     switch(rand() % 4) {
     case 0:
-      SDL_SetRenderDrawColor(r, 255, 0, 0, 25);
+      SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
        if (x2 + step < winwidth) x2 += step;
       break;
     case 1:
-      SDL_SetRenderDrawColor(r, 0, 255, 0, 25);
+      SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
       if (x2 - step > 0) x2 -= step;
       break;
     case 2:
-      SDL_SetRenderDrawColor(r, 255, 255, 255, 25);
+      SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
       if (y2 + step < winheight) y2 += step;
       break;
     case 3:
-      SDL_SetRenderDrawColor(r, 0, 255, 255, 25);
+      SDL_SetRenderDrawColor(r, 0, 255, 255, 255);
       if (y2 - step > 0) y2 -= step;
       break;
     } //switch
