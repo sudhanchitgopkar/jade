@@ -20,10 +20,3 @@ void scale (float sx, float sy);
 void scale (float sx, float sy, float cx, float cy);
 void rotate (float rad);
 void rotate (float rad, float cx, float cy); 
-/*
-std::vector<std::vector<float>> translate (float tx, float ty);
-std::vector<std::vector<float>> scale (float sx, float sy);
-std::vector<std::vector<float>> scale (float sx, float sy, float cx, float cy);
-std::vector<std::vector<float>> rotate (float rad);
-std::vector<std::vector<float>> rotate (float rad, float cx, float cy); 
-*/
