@@ -13,7 +13,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
+#include <string>
 #include "../toolbox/line.h"
+#include "../toolbox/2dTransform.h"
 
 using namespace std;
 
@@ -45,15 +48,121 @@ int main() {
 
   bool quit = false;                                      
   SDL_Event e;     
-  SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
+  SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
+  printMenu();
+  char cmd;
+  string file;
+  float x,y,cx,cy,rad;
+
+  //GENERAL ROTATION
+  /*
+  inputLines("implementations/lineInput/foo.txt");
+  for (int i = 1; i <= 360; i++) {
+    rotate((i * 0.017453), 300, 300);
+    transform();
+    display(r);
+    rotate(-1 * (i * 0.017453), 300, 300);
+    transform();
+    outputLines("out.txt");
+  } //for
+  */
+
+  //BASIC ROTATION
+  /*
+  inputLines("implementations/lineInput/bar.txt");
+  for (int i = 1; i <= 360; i++) {
+    rotate((i * 0.017453));
+    transform();
+    display(r);
+    rotate(-1*(i * 0.017453));
+    transform();
+  } //for
+  */
+
+  //GENERAL SCALE
+  /*
+  inputLines("implementations/lineInput/square.txt");
+  for (float i = 1; i > 0; i -= 0.01) {
+    scale(i,i,300,300);
+    transform();
+    display(r);
+  } //for
+  */
+
+  //BASIC SCALE
+  /*
+  inputLines("implementations/lineInput/square.txt");
+  for (float i = 1; i > 0; i -= 0.01) {
+    scale(i,i);
+    transform();
+    display(r);
+  } //for
+  */
+
+  //GENERAL SCALE
+  /*
+  inputLines("implementations/lineInput/square.txt");
+  for (float i = 0; i < 100; i++) {
+    translate(5,5);
+    transform();
+    display(r);
+  } //for
+  */
   
+  SDL_RenderPresent(r);
   while (1) {
-    
-    /*
-      YOUR IMPLEMENTATION HERE!
-    */
-    
     SDL_RenderPresent(r);
+    cout << "user@jade$ ";
+    cin >> cmd;
+    try {
+    if (cmd == 'h') {
+      printMenu();
+    } else if (cmd == 'q') {
+      cout << "Goodbye!\n";
+      return 0;
+    } else if (cmd == 'a') {
+      transform();
+    } else if (cmd == 'i') {
+      cin >> file;
+      if (cin.fail()) throw "Invalid arguments";
+      inputLines(file);
+    } else if (cmd == 'o') {
+      cin >> file;
+      if (cin.fail()) throw "Invalid arguments";
+      outputLines(file);
+    } else if (cmd == 't') {
+      cin >> x >> y;
+      if (cin.fail()) throw "Invalid arguments";
+      translate(x,y);
+    } else if (cmd == 's') {
+      cin >> x >> y;
+      if (cin.fail()) throw "Invalid arguments";
+      scale(x,y);
+    } else if (cmd == 'S') {
+      cin >> x >> y >> cx >> cy;
+      if (cin.fail()) throw "Invalid arguments";
+      scale(x,y,cx,cy);
+    } else if (cmd == 'r') {
+      cin >> rad;
+      if (cin.fail()) throw "Invalid arguments";
+      rotate(rad);
+    } else if (cmd == 'R') {
+      cin >> rad >> cx >> cy;
+      if (cin.fail()) throw "Invalid arguments";
+      rotate(rad,cx,cy);
+    } else if (cmd == 'd') {
+      display(r);
+    } else if (cmd == 'c') {
+      SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
+      SDL_RenderClear(r);
+      SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
+    } else {
+      cout << "Command not recognized! Enter \'h\' for help.\n";
+    } //if
+    } catch (const char *  e) {
+      cout << "Invalid arguments! Enter \'h\' for help.\n";
+      cin.clear();
+    }
     
     if (SDL_PollEvent(&e) && e.type == SDL_QUIT)
       break;
