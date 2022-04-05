@@ -1,0 +1,262 @@
+#include <SDL2/SDL.h>
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include <vector>
+#include "line.h"
+#include "3dTransform.h"
+
+using namespace std;
+
+vector<vector<float>> m {
+  {1,0,0,0},
+  {0,1,0,0},
+  {0,0,1,0},
+  {0,0,0,1}};
+
+vector<vector<float>> points {{}};
+
+int numLines = 0;
+
+vector<vector<float>> mult (vector<vector<float>> a, vector<vector<float>> b) {
+  if (a.size() != 4 || a[0].size() != 4) cout << "1. Matrix A must be 4x4\n";
+  if (b.size() != 4 || b[0].size() != 4) cout << "1. Matrix B must be 4x4\n";
+    
+  vector<vector<float>> prod {
+    {0,0,0,0},
+    {0,0,0,0},
+    {0,0,0,0},
+    {0,0,0,0}};
+
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++) 
+      for (int k = 0; k < 4; k++) 
+	prod[i][j]+=a[i][k]*b[k][j];
+
+  return prod;
+} //mult
+
+vector<float> mult (vector<float> a, vector<vector<float>> b) {
+  if (a.size() != 4) cout << "2. Matrix A must be 1x4\n";
+  if (b.size() != 4 || b[0].size() != 4) cout << "2. Matrix B must be 4x4\n";
+
+  vector<float> prod = {0,0,0,0};
+
+  for (int i = 0; i < 4; i++)
+    for (int j = 0; j < 4; j++)
+      prod[i] += a[j] * b[j][i];
+  
+  return prod;
+} //mult
+
+int inputLines (string filename) {
+  ifstream ifs(filename);
+  if (!ifs.is_open()) {
+    cout << "File " << filename << " could not be opened! Check name + permissions.\n";
+    return -1;
+  } //if
+
+  ifs >> numLines;
+  if (--numLines <= 0) { //dec numLines to account for first line
+    cout << "USAGE: \n\tline 1: number of lines in file\n" <<
+    "\tlines 2 - end: [x1] [y1] [z1] [x2] [y2] [z2]\n";
+    return -1;
+  } else {
+    cout << numLines <<  " lines processed." << endl;
+  }
+  points.resize(2*numLines);
+  points[0].resize(4);
+  
+  float x1,y1,z1,count = 0;
+    
+  while (ifs >> x1 >> y1 >> z1) 
+    points[count++] = {x1,y1,z1,1}; //populate points vector
+
+  ifs.close();
+  return numLines;
+} //inputLines
+
+vector<vector<float>> tMatrix (float tx, float ty, float tz) {
+  return vector<vector<float>> {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {tx,ty,tz,1}};
+} //tMatrix
+
+vector<vector<float>> sMatrix (float sx, float sy, float sz) {
+  return vector<vector<float>> {
+    {sx,0,0,0},
+    {0,sy,0,0},
+    {0,0,sz,0},
+    {0,0,0,1}};
+} //sMatrix
+
+std::vector<std::vector<float>> rxMatrix (float rad) {
+    return vector<vector<float>> {
+    {1,0,0,0},
+    {0,cos(rad),sin(rad),0},
+    {0,-1 * sin(rad),cos(rad),0},
+    {0,0,0,1}};
+} //rxMatrix
+
+std::vector<std::vector<float>> ryMatrix (float rad) {
+    return vector<vector<float>> {
+      {cos(rad),0,-1 * sin(rad),0},
+      {0,1,0,0},
+      {sin(rad),0,cos(rad),0},
+      {0,0,0,1}};
+} //ryMatrix
+
+std::vector<std::vector<float>> rzMatrix (float rad) {
+    return vector<vector<float>> {
+      {cos(rad),sin(rad),0,0},
+      {-sin(rad),cos(rad),0,0},
+      {0,0,1,0},
+      {0,0,0,1}};
+} //rzMatrix
+
+void translate (float tx, float ty, float tz) {
+  m = mult(m,tMatrix(tx,ty,tz));
+} //translate
+
+void scale (float sx, float sy, float sz) {
+  cout << "Scaling by (" << sx << "," << sy << "," << sz << ")\n";
+  m = mult(m,sMatrix(sx,sy,sz));
+} //scale
+
+void scale (float sx, float sy, float sz, float cx, float cy, float cz) {
+  cout << "Scaling by (" << sx << "," << sy << "," << sz <<
+    ") about (" << cx << "," << cy << "," << cz << ")\n";
+  vector<vector<float>> temp {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {0,0,0,1}};
+  temp = mult(tMatrix(-1 * cx, -1 * cy, -1 * cz), sMatrix(sx,sy,sz));
+  temp = mult(temp,tMatrix(cx,cy,cz));
+  m = mult(m,temp);
+} //scale
+
+void rotateX (float rad) {
+  m = mult(m,rxMatrix(rad));
+} //rotateX
+
+void rotateY (float rad) {
+  m = mult(m,ryMatrix(rad));
+} //rotateX
+
+void rotateZ (float rad) {
+  m = mult(m,rzMatrix(rad));
+} //rotateX
+
+void printMatrix(vector<vector<float>> v) {
+  for (int i = 0; i < v.size(); i++)
+    for (int j = 0; j < v[0].size(); j++)
+      if (j == v[0].size()-1) cout << v[i][j] << endl;
+      else cout << v[i][j] << "\t";
+  cout << endl;
+} //printMatrix
+
+void transform () {
+  //cout << "Transformation Matrix:\n";
+  //printMatrix(m);
+
+  for (int i = 0; i < numLines*2; i++)
+    points[i] = mult(points[i],m);
+  
+  m = {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {0,0,0,1}};    
+} //transform
+
+void display(SDL_Renderer* r) {
+
+  vector<vector<float>> dispM(clipToDisp(worldToClip(points)));
+
+  for (int i = 1; i < dispM.size(); i+=2) {
+    //putPixel(r, dispM[i][0], dispM[i][1]);
+    //putPixel(r, dispM[i-1][0], dispM[i-1][1]);
+    line(r, dispM[i][0],dispM[i][1],dispM[i-1][0],dispM[i-1][1]);
+   //line(r,dispM[i][0],dispM[i-1][0],dispM[i][0],dispM[i-1][0]);
+  }
+    
+} //display
+
+vector<vector<float>> clipToDisp (vector<vector<float>> p) {
+  vector<vector<float>> d = points;
+ 
+  for (int i = 0; i < d.size(); i++) {
+      d[i][0] = ((p[i][0]/p[i][2])*300) + 300;
+      d[i][1] = ((p[i][1]/p[i][2])*300) + 300;
+  } //for
+  return d;
+} //clipToDisp
+
+
+vector<vector<float>> worldToClip (vector<vector<float>> p) {
+  float viewx = 5, viewy = 8, viewz = -9;
+  float t3y = viewy/(sqrt(viewx * viewx + viewy * viewy));
+  float t3x = viewx/(sqrt(viewx * viewx + viewy * viewy));
+  float t4x = (sqrt(pow(viewx,2) + pow(viewy,2)))/
+    (sqrt(pow(viewz,2) + pow(sqrt(pow(viewx,2) + pow(viewy,2)),2)));
+  float t4z = viewz/
+    (sqrt(pow(viewz,2) + pow(sqrt(pow(viewx,2) + pow(viewy,2)),2)));
+   
+  vector<vector<float>> t1 {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {-1*viewx,-1*viewy,-1*viewz,1}};
+
+  vector<vector<float>> t2 {
+    {1,0,0,0},
+    {0,0,-1,0},
+    {0,1,0,0},
+    {0,0,0,1}};
+  
+  vector<vector<float>> t3 {
+    {-1*t3y,0,t3x,0},
+    {0,1,0,0},
+    {-1*t3x,0,-1*t3y,0},
+    {0,0,0,1}};
+
+  vector<vector<float>> t4 {
+    {1,0,0,0},
+    {0,t4x,t4z,0},
+    {0,-1*t4z,t4x,0},
+    {0,0,0,1}};
+  
+  vector<vector<float>> t5 {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,-1,0},
+    {0,0,0,1}};  
+
+  vector<vector<float>> n {
+    {60/20,0,0,0},
+    {0,60/20,0,0},
+    {0,0,1,0},
+    {0,0,0,1}};  
+
+  vector<vector<float>> temp {
+    {1,0,0,0},
+    {0,1,0,0},
+    {0,0,1,0},
+    {0,0,0,1}};
+  
+  temp = mult(temp,t1);
+  temp = mult(temp,t2);
+  temp = mult(temp,t3);
+  temp = mult(temp,t4);
+  temp = mult(temp,t5);
+  temp = mult(temp,n);
+
+  for (int i = 0; i < p.size(); i++)
+    p[i] = mult(p[i],temp);
+  
+  return p;
+} //worldToClip
+
