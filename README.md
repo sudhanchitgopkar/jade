@@ -29,5 +29,7 @@ To clean up your compiled binaries and autosave files, simply run:
 ```console
 $ make clean
 ```
+To use the CLI, use the current `main.cpp` file, compile using `make jade` as aforementioned. Sample input files can be found within `implementations/lineInputs`.
+
 ---
 Jade is still in its early stages as a graphics package, and all contributions are welcome! Please submit a pull request to contribute, suggest features, or fix bugs. This repository owner and maintainer can be contacted [here](https://sudhan.dev).
