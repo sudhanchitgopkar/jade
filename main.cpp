@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
   SDL_RenderPresent(r);
     
   while (1) {
-    //SDL_Delay(10);
+    SDL_Delay(10);
     SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
     SDL_RenderClear(r);
     SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
