@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "../toolbox/line.h"
 #include "../toolbox/3dTransform.h"
 
@@ -33,7 +34,7 @@ int main(int argc, char** argv) {
 
   w = SDL_CreateWindow("Jade",
 		       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		       600, 600, SDL_WINDOW_SHOWN);
+		       1000, 1000, SDL_WINDOW_SHOWN);
   if (!w) {
     std::cout << "Window creation error: " << SDL_GetError() << endl; 
     return 1;
@@ -52,32 +53,38 @@ int main(int argc, char** argv) {
 
   int x = 0, y = 0;
   SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
-  inputLines("foo.txt");
+  inputLines("spike.txt");
   display(r);
   SDL_RenderPresent(r);
     
   while (1) {
-    SDL_Delay(10);
+    //SDL_Delay(10);
     SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
     SDL_RenderClear(r);
     SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
 
     /* ROTATION TESTING */
-    rotateX(0.01);
-    rotateY(0.01);
-    rotateZ(0.01);
+    //rotateX((rand() % 10) * 0.005);
+    //rotateY((rand() % 10) * 0.005);
+    //rotateZ((rand() % 10) * 0.005);
+    //rotateX(0.005);
+    rotateY(-0.005);
+    // rotateZ(0.005);
+    
     
     /* SCALING TESTING */
-    scale(1.01,1,1);
-    scale(1,1.01,1);
-    scale(1,1,1.01);
-    scale(0.99,0.99,1);
-
+    //scale(1.01,1,1);
+    //scale(1,1.01,1);
+    //scale(1,1,1.01);
+    //scale(0.999,0.999,0.9991);
+    
+    
     /* TRANSLATE TESTING */
+    /*
     translate(0.01,0,0);
     translate(0,0.01,0);
     translate(0,-.01,-.01);
-
+    */
     transform();
     display(r);
     SDL_RenderPresent(r);
