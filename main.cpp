@@ -52,11 +52,13 @@ int main(int argc, char** argv) {
   SDL_Event e;     
 
   int x = 0, y = 0;
+  int count = 0;
+  bool flag = false;
   SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
-  inputLines("spike.txt");
+  inputLines("cubeback.txt");
   display(r);
   SDL_RenderPresent(r);
-    
+  rotateY(-0.1);
   while (1) {
     SDL_Delay(10);
     SDL_SetRenderDrawColor(r, 0, 0, 0, 255);
@@ -68,7 +70,16 @@ int main(int argc, char** argv) {
     //rotateY((rand() % 10) * 0.005);
     //rotateZ((rand() % 10) * 0.005);
     //rotateX(0.005);
-    rotateY(-0.005);
+    if (flag)
+      rotateY(-0.007);
+    else
+      rotateY(0.007);
+
+    if (count++ % 50 == 0) {
+      if (flag) flag = false;
+      else flag = true;
+    } //if
+    
     // rotateZ(0.005);
     
     
