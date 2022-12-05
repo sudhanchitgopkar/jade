@@ -3,6 +3,7 @@
 #include <fstream>
 #include <math.h>
 #include <vector>
+#include <string>
 #include "line.h"
 #include "3dTransform.h"
 
@@ -15,6 +16,8 @@ vector<vector<float>> m {
   {0,0,0,1}};
 
 vector<vector<float>> points {{}};
+vector<vector<float>> faces {{}};
+
 
 int numLines = 0;
 
@@ -56,22 +59,34 @@ int inputLines (string filename) {
     return -1;
   } //if
 
-  ifs >> numLines;
-  if (--numLines <= 0) { //dec numLines to account for first line
-    cout << "USAGE: \n\tline 1: number of lines in file\n" <<
-    "\tlines 2 - end: [x1] [y1] [z1] [x2] [y2] [z2]\n";
-    return -1;
-  } else {
-    cout << numLines <<  " lines processed." << endl;
+  string line;
+  int numPoints = 0, numFaces = 0;
+  while (getline(ifs, line)) {
+    if (line.substr(0,2)=="v ")
+      numPoints++;
+    else if (line.substr(0,2)=="f ")
+      numFaces++;
   }
-  points.resize(2*numLines);
-  points[0].resize(4);
-  
-  float x1,y1,z1,count = 0;
-    
-  while (ifs >> x1 >> y1 >> z1) 
-    points[count++] = {x1,y1,z1,1}; //populate points vector
 
+  points.resize(numPoints);
+  points[0].resize(4);
+
+  faces.resize(numFaces);
+  faces[0].resize(3);
+
+  ifs.clear();
+  ifs.seekg(0);
+
+  float x1 = 0, y1 = 0, z1 = 0;
+  int vcount = 0, fcount = 0;
+  
+  while (ifs >> line >> x1 >> y1 >> z1)
+    if (line.substr(0,2)=="v ")
+      points[vcount++] = {x1,y1,z1};
+    else if (line.substr(0,2)=="f ")
+      faces[fcount++] = {x1,y1,z1};
+
+  
   ifs.close();
   return numLines;
 } //inputLines
@@ -170,10 +185,8 @@ void display(SDL_Renderer* r) {
 
   vector<vector<float>> dispM(clipToDisp(worldToClip(points)));
 
-  for (int i = 1; i < dispM.size(); i+=2) {
-    //putPixel(r, dispM[i][0], dispM[i][1]);
-    //putPixel(r, dispM[i-1][0], dispM[i-1][1]);
-    line(r, dispM[i][0],dispM[i][1],dispM[i-1][0],dispM[i-1][1]);
+  for (int i = 1; i < faces.size(); i++) {
+    line(r, dispM[faces[i][0]][0],dispM[faces[i][1]][1],dispM[i-1][0],dispM[i-1][1]);
   }
     
 } //display
@@ -182,8 +195,8 @@ vector<vector<float>> clipToDisp (vector<vector<float>> p) {
   vector<vector<float>> d = points;
  
   for (int i = 0; i < d.size(); i++) {
-      d[i][0] = ((p[i][0]/p[i][2])*399.5) + 500;
-      d[i][1] = ((p[i][1]/p[i][2])*399.5) + 500;
+      d[i][0] = ((p[i][0]/p[i][2])*499.5) + 500;
+      d[i][1] = ((p[i][1]/p[i][2])*499.5) + 500;
   } //for
   return d;
 } //clipToDisp

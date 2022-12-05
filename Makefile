@@ -1,5 +1,8 @@
-jade:
+2d:
 	g++ -o run main.cpp -I include/ toolbox/line.cpp toolbox/2dTransform.cpp -L lib/ -l SDL2-2.0.0 -std=c++0x
+
+3d:
+	g++ -o run main.cpp -I include/ toolbox/line.cpp toolbox/3dTransform.cpp -L lib/ -l SDL2-2.0.0 -std=c++0x
 
 randLines:
 	g++ -o run implementations/randLines.cpp -I include/ toolbox/line.cpp toolbox/2dTransform.cpp -L lib/ -l SDL2-2.0.0 -std=c++0x

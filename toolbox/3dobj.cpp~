@@ -15,6 +15,8 @@ vector<vector<float>> m {
   {0,0,0,1}};
 
 vector<vector<float>> points {{}};
+vector<vector<float>> faces {{}};
+
 
 int numLines = 0;
 
@@ -56,22 +58,8 @@ int inputLines (string filename) {
     return -1;
   } //if
 
-  ifs >> numLines;
-  if (--numLines <= 0) { //dec numLines to account for first line
-    cout << "USAGE: \n\tline 1: number of lines in file\n" <<
-    "\tlines 2 - end: [x1] [y1] [z1] [x2] [y2] [z2]\n";
-    return -1;
-  } else {
-    cout << numLines <<  " lines processed." << endl;
-  }
-  points.resize(2*numLines);
-  points[0].resize(4);
   
-  float x1,y1,z1,count = 0;
-    
-  while (ifs >> x1 >> y1 >> z1) 
-    points[count++] = {x1,y1,z1,1}; //populate points vector
-
+  
   ifs.close();
   return numLines;
 } //inputLines
@@ -182,8 +170,8 @@ vector<vector<float>> clipToDisp (vector<vector<float>> p) {
   vector<vector<float>> d = points;
  
   for (int i = 0; i < d.size(); i++) {
-      d[i][0] = ((p[i][0]/p[i][2])*399.5) + 500;
-      d[i][1] = ((p[i][1]/p[i][2])*399.5) + 500;
+      d[i][0] = ((p[i][0]/p[i][2])*499.5) + 500;
+      d[i][1] = ((p[i][1]/p[i][2])*499.5) + 500;
   } //for
   return d;
 } //clipToDisp
