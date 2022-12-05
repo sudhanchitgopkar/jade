@@ -8,8 +8,6 @@ void putPixel (SDL_Renderer* ren, int x, int y) {
 } //putPixel
 
 void bresLine (SDL_Renderer* ren, int x1, int y1, int x2, int y2) {
-
-  
   int dx = x2 - x1,dy = y2 - y1,dx1 = fabs(dx),dy1 = fabs(dy);
   int px = 2 * dy1 - dx1,py = 2 * dx1 - dy1;
   int x,y,xe,ye,i;
@@ -66,7 +64,6 @@ void bresLine (SDL_Renderer* ren, int x1, int y1, int x2, int y2) {
 } //bresLine
 
 void line (SDL_Renderer* s, int x1, int y1, int x2, int y2) {
-
   float x1f = (float) x1, x2f = (float) x2;
   float y1f = (float) y1, y2f = (float) y2;
 
