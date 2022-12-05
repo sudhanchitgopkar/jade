@@ -46,23 +46,27 @@ int main(int argc, char** argv) {
     if (x < 600 && y == 0) {
       bresLine(r,300,300,x,y);
       //SDL_SetRenderDrawColor(r, 0, 0, 255, 255);
-      line(r,300,300,x,y);
-      x+=5;
+      //line(r,300,300,x,y);
+      //x+=5;
+      x++;
     } else if (x >= 600 && y < 600) {
       bresLine(r,300,300,x,y);
       //SDL_SetRenderDrawColor(r, 0, 0, 255, 255);
-      line(r,300,300,x,y);
-      y+= 5;
+      //line(r,300,300,x,y);
+      //y+= 5;
+      y++;
     } else if (x >= 0 && y >= 600) {
       bresLine (r,300,300,x,y);
       //SDL_SetRenderDrawColor(r, 0, 0, 255, 255);
-      line (r,300,300,x,y);
-      x -= 5;
+      //line (r,300,300,x,y);
+      x--;
+      //x -= 5;
     } else {
       bresLine (r,300,300,x,y);
       //SDL_SetRenderDrawColor(r, 0, 0, 255, 255);
-      line (r,300,300,x,y);
-      y -= 5;
+      //line (r,300,300,x,y);
+      y--;
+      //y -= 5;
     } //if
     SDL_RenderPresent(r);
     if (SDL_PollEvent(&e) && e.type == SDL_QUIT)

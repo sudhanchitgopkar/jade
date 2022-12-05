@@ -39,25 +39,15 @@ int main(int argc, char** argv) {
   bool quit = false;                                      
   SDL_Event e;     
 
-  SDL_SetRenderDrawColor(r,0,255,0,255);
-  int MAX_LINES = 1000, count = 0;
-  if (argc > 2)
-    std::cout << "USAGE: ./run [LINES TO DRAW]\nDefault: 1000 lines\n";
-  if (argc == 2) MAX_LINES = atoi(argv[1]);
-  std::cout << "Drawing: " << MAX_LINES << " lines\n";
-  clock_t t;
-  t = clock();
-  while (1) {
-    bresLine(r,rand()%600,rand()%600,rand()%600,rand()%600);
-    //SDL_RenderPresent(r);
-    if (count++ >= MAX_LINES) {
-      t = clock() - t;
-      double time_taken = ((double)t)/CLOCKS_PER_SEC;
-      std::cout << time_taken << " seconds taken" << endl;
-      break;
-    }
-    if (SDL_PollEvent(&e) && e.type == SDL_QUIT) break;
-  } //while
+  int x = 0, y = 0;
+  SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
+ 
+ while (1) {
+   line(r,300,300,rand()%600,rand()%600);
+   SDL_RenderPresent(r);
+   if (SDL_PollEvent(&e) && e.type == SDL_QUIT)
+     break;
+ } //while
   
   SDL_DestroyRenderer(r);
   SDL_DestroyWindow(w);
