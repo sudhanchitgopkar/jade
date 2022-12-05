@@ -46,15 +46,15 @@ int main() {
   bool quit = false;                                      
   SDL_Event e;     
   SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
- 
+  
   while (1) {
-
+    
     /*
       YOUR IMPLEMENTATION HERE!
     */
-
+    
     SDL_RenderPresent(r);
-    SDL_Delay(50);
+    
     if (SDL_PollEvent(&e) && e.type == SDL_QUIT)
       break;
   } //while
