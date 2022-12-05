@@ -22,7 +22,7 @@ int main(int argc, char** argv) {
 
   w = SDL_CreateWindow("Jade",
 		       SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		       600, 600, SDL_WINDOW_SHOWN);
+		       1000, 1000, SDL_WINDOW_SHOWN);
   if (!w) {
     std::cout << "Window creation error: " << SDL_GetError() << endl; 
     return 1;
@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
   t = clock();
   while (1) {
     bresLine(r,rand()%600,rand()%600,rand()%600,rand()%600);
-    //SDL_RenderPresent(r);
+    SDL_RenderPresent(r);
     if (count++ >= MAX_LINES) {
       t = clock() - t;
       double time_taken = ((double)t)/CLOCKS_PER_SEC;
