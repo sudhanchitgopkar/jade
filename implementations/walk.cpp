@@ -38,25 +38,27 @@ int main() {
   SDL_Event e;     
 
   int x1 = 300, y1 = 300, x2 = 300, y2 = 300, step = 10;
+  int winwidth = 600, winheight = 600;
   SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
- 
+  SDL_SetRenderDrawBlendMode(r, SDL_BLENDMODE_BLEND);
+
   while (1) {
 
     switch(rand() % 4) {
     case 0:
-      SDL_SetRenderDrawColor(r, 255, 0, 0, 255);
-       if (x2 + step < 600) x2 += step;
+      SDL_SetRenderDrawColor(r, 255, 0, 0, 25);
+       if (x2 + step < winwidth) x2 += step;
       break;
     case 1:
-      SDL_SetRenderDrawColor(r, 0, 255, 0, 255);
+      SDL_SetRenderDrawColor(r, 0, 255, 0, 25);
       if (x2 - step > 0) x2 -= step;
       break;
     case 2:
-      SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
-      if (y2 + step < 600) y2 += step;
+      SDL_SetRenderDrawColor(r, 255, 255, 255, 25);
+      if (y2 + step < winheight) y2 += step;
       break;
     case 3:
-      SDL_SetRenderDrawColor(r, 0, 255, 255, 255);
+      SDL_SetRenderDrawColor(r, 0, 255, 255, 25);
       if (y2 - step > 0) y2 -= step;
       break;
     } //switch
